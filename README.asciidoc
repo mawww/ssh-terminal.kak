@@ -1,0 +1,35 @@
+SSH :terminal
+-------------
+
+This script implement a `ssh-terminal` command suitable for the `terminal`
+alias to be used when the terminal emulator should run on another machine.
+
+The typical use case for this is working on a head less server:
+
+--------------------------------------------
+[user@client]$ ssh user@server
+[user@server]$ kak # how to make :new work ?
+--------------------------------------------
+
+The solution is to ssh into client, run a new terminal emulator that ssh
+back into server and runs the provided command.
+
+This enables the local window manager to see different terminal emulators
+for each remote clients, instead of having to use `tmux` or similar.
+
+`ssh-terminal` does this using two options:
+
+* *ssh_terminal_target* which is the username@host of the client
+* *ssh_terminal_cmd* which is the command to run a terminal emulator there
+
+For example:
+
+-----------------------------------------------------------------------------
+set-option global ssh_terminal_target user@client
+set-option global ssh_terminal_cmd 'env WAYLAND_DISPLAY=wayland-1 foot sh -c'
+-----------------------------------------------------------------------------
+
+In order for this to work connecting from `client` to `server` needs to be
+password less, connecting from `server` to `client` can require a password
+and will prompt in kakoune if necessary. It is recommended to use ssh control
+master support to share the ssh connections and avoid having to enter passwords
