@@ -25,3 +25,8 @@ define-command ssh-terminal -override -params .. %{
         ssh-exec %opt{ssh_terminal_target} %sh{ echo "$kak_opt_ssh_terminal_cmd \"ssh -t $HOSTNAME -- \\\"cd $PWD; env PATH=$PATH $kak_quoted_reg_a\\\"\"" }
     }
 }
+
+alias global ssh-terminal-window ssh-terminal
+alias global ssh-terminal-horizontal ssh-terminal
+alias global ssh-terminal-vertical ssh-terminal
+alias global ssh-terminal-tab ssh-terminal
