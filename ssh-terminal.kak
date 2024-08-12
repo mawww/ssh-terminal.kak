@@ -1,4 +1,5 @@
 declare-option str ssh_terminal_target
+declare-option str ssh_terminal_server %sh{echo $HOSTNAME}
 declare-option str ssh_terminal_cmd
 
 define-command ssh-exec -override -params 2 -docstring 'ssh-exec <target> <shell command>' %{
@@ -23,7 +24,9 @@ define-command ssh-exec -override -params 2 -docstring 'ssh-exec <target> <shell
 define-command ssh-terminal -override -params .. %{
     evaluate-commands -save-regs 'a' %{
         set-register a %arg{@}
-        ssh-exec %opt{ssh_terminal_target} %sh{ echo "$kak_opt_ssh_terminal_cmd \"ssh -t $HOSTNAME -- \\\"cd $PWD; env PATH=$PATH $kak_quoted_reg_a\\\"\"" }
+        ssh-exec %opt{ssh_terminal_target} %sh{
+            echo "$kak_opt_ssh_terminal_cmd \"ssh -t $kak_opt_ssh_terminal_server -- \\\"cd $PWD; env PATH=$PATH XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR $kak_quoted_reg_a\\\"\""
+        }
     }
 }
 
