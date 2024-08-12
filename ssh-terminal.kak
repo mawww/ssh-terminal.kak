@@ -5,6 +5,7 @@ define-command ssh-exec -override -params 2 -docstring 'ssh-exec <target> <shell
     evaluate-commands %sh{
         dir=$(mktemp -d "${TMPDIR:-/tmp}"/kak-ssh.XXXXXXXX)
         mkfifo "$dir/fifo"
+        echo "#!/bin/sh" > $dir/askpass
         echo "echo 'eval -client $kak_client -verbatim -- prompt -password -on-abort %{ echo -to-file $dir/fifo } ssh-password: %{ echo -to-file $dir/fifo %val{text} }' | kak -p $kak_session" >> $dir/askpass
         echo "cat '$dir/fifo'" >> $dir/askpass
         chmod +x "$dir/askpass"
