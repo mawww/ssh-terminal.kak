@@ -30,6 +30,19 @@ define-command ssh-terminal -override -params .. %{
     }
 }
 
+define-command ssh-teminal-enable-from-connection -params 1 %{
+    evaluate-commands %sh{
+        if [ -z "$SSH_CONNECTION" ]; then
+            echo "fail 'SSH_CONNECTION is not set'"
+            exit
+        fi
+        echo "set global windowing_module ssh"
+        echo "set global ssh_terminal_target $(echo $SSH_CONNECTION | cut -d' ' -f1)"
+        echo "set global ssh_terminal_server $(echo $SSH_CONNECTION | cut -d' ' -f3)"
+        echo "set global ssh_terminal_cmd %{$1}"
+    }
+}
+
 alias global ssh-terminal-window ssh-terminal
 alias global ssh-terminal-horizontal ssh-terminal
 alias global ssh-terminal-vertical ssh-terminal
